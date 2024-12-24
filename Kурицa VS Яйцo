@@ -1,0 +1,52 @@
+using System;
+using System.Threading;
+
+class Program
+{
+    static object lockObj = new object();
+    static string lastMessage = "";
+
+    static void Main()
+    {
+        Thread chickenThread = new Thread(SayChicken);
+        Thread eggThread = new Thread(SayEgg);
+
+        chickenThread.Start();
+        eggThread.Start();
+
+        chickenThread.Join();
+        eggThread.Join();
+
+        Console.WriteLine($"Результат спора: {lastMessage}");
+    }
+
+    static void SayChicken()
+    {
+        Random rand = new Random();
+
+        for (int i = 0; i < 1; i++)
+        {
+            lock (lockObj)
+            {
+                Console.WriteLine("Курица");
+                lastMessage = "Курица";
+            }
+            Thread.Sleep(rand.Next(10, 50));
+        }
+    }
+
+    static void SayEgg()
+    {
+        Random rand = new Random();
+
+        for (int i = 0; i < 1; i++)
+        {
+            lock (lockObj)
+            {
+                Console.WriteLine("Яйцо");
+                lastMessage = "Яйцо";
+            }
+            Thread.Sleep(rand.Next(10, 50));
+        }
+    }
+}
